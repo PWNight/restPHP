@@ -5,7 +5,6 @@
 	header('Access-Control-Allow-Headers: *');
 	header('Content-Type: application/json');
     include('functions.php');
-    session_start();
     $data = json_decode(file_get_contents("php://input"));
     $ip = $_SERVER['REMOTE_ADDR'];
     $login = $data->login;
@@ -29,7 +28,6 @@
                 $sql = "INSERT INTO `auth`(`user`, `ip`) VALUES ('$login','$ip')";
                 $result = mysqli_query($conn,$sql);
                 if($result){
-                    session_write_close();
                     echo json_message(200,true,"$ip");
                 }
             }

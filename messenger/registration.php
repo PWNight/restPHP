@@ -1,30 +1,36 @@
 <?php
-    include('function.php');
-    session_start();
-    
-    if(!isset($_SESSION['token'])){
-        if(isset($_POST['login'],$_POST['password'])){
-            $conn = connect();
-            $login = $_POST['login'];
-            $password = md5($_POST['password']);
+	header('Access-Control-Allow-Origin: *');
+    header("Access-Control-Allow-Credentials: true");
+	header('Access-Control-Allow-Methods: POST');
+	header('Access-Control-Allow-Headers: *');
+	header('Content-Type: application/json');
+    include('functions.php');
+    $data = json_decode(file_get_contents("php://input"));
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $login = $data->login;
+    $password = $data->password;
+    $conn = connect();
+    $sql = "SELECT * FROM auth WHERE ip = '$ip'";
+    $result = mysqli_query($conn,$sql);
+    $result_mass = mysqli_fetch_assoc($result);
+    if($result_mass != Null){
+        echo json_message(200,true,"$ip");
+    }else{
+        if(!$login || !$password){
+            echo json_message('422','false',"Fields or one of field can not be empty");
+        }else{
             $sql = "SELECT * FROM users WHERE login = '$login' AND password = '$password'";
             $result = mysqli_query($conn,$sql);
             $result_mass = mysqli_fetch_assoc($result);
-            var_dump($result_mass);
-            /*if($result_mass != None){
-                return message(400,false,'Account already registred')
-            }*/
-            //TODO: Добавить поля role, nickname, created_at
-            $sql = "INSERT INTO users(login, password) VALUES('$login','$password')";
-            $result = mysqli_query($conn,$sql);
-            if(!$result){
-                return json_message(400,false,'SQL error');
+            if($result_mass != Null){
+                echo json_message(403,false,"Account already exists");
+            }else{
+                $sql = "INSERT INTO `user`(`login`, `password`) VALUES ('$login','$password')";
+                $result = mysqli_query($conn,$sql);
+                if($result){
+                    echo json_message(200,true,"$ip");
+                }
             }
-            $token = md5($login);
-            $_SESSION["token"] = $token;
-            header('Location: index.php');
         }
-    }else{
-        header('Location: index.php');
     }
 ?>
