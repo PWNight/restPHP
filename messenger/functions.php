@@ -8,12 +8,10 @@
 			'status' => (int)$status,
 			'content-Type' => 'application/json',
 			'body' => array(
-				'success' => (bool)$success, // Приведение типа success к булевому значению
+				'success' => (bool)$success,
 				'message' => $message
 			)
 		);
-	
-		// Encode the array as JSON and return it
 		return json_encode($response,1);
 	}
 ?>
