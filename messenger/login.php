@@ -17,7 +17,7 @@
         echo json_message(200,true,"$ip");
     }else{
         if(!$login || !$password){
-            echo json_message('422','false',"Fields or one of field can not be empty");
+            echo json_message('422',false,"Fields or one of field can not be empty");
         }else{
             $sql = "SELECT * FROM users WHERE login = '$login' AND password = '$password'";
             $result = mysqli_query($conn,$sql);
@@ -26,6 +26,7 @@
                 echo json_message(403,false,"Login failed");
             }else{
                 $sql = "INSERT INTO `auth`(`user`, `ip`) VALUES ('$login','$ip')";
+                echo $sql;
                 $result = mysqli_query($conn,$sql);
                 if($result){
                     echo json_message(200,true,"$ip");

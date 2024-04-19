@@ -17,7 +17,7 @@
             if($result_mass != Null){
                 echo json_message(400,false,'Account already registred');
             }
-            $sql = "INSERT INTO users(login, password, nickname) VALUES('$login','$password', '$nickname')";
+            $sql = "INSERT INTO users(login, password, nickname) VALUES('$login','$password','$nickname')";
             $result = mysqli_query($conn,$sql);
             if(!$result){
                 echo json_message(400,false,'SQL error');

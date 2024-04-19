@@ -13,10 +13,11 @@
             $result_mass = mysqli_fetch_assoc($result);
             if($result_mass == Null){
                 echo json_message(400,false,"Login failed");
+            }else{
+                $token = md5($login);
+                $_SESSION["token"] = $token;
+                header('Location: index.php');
             }
-            $token = md5($login);
-            $_SESSION["token"] = $token;
-            header('Location: index.php');
         }
     }else{
         header('Location: index.php');

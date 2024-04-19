@@ -13,18 +13,19 @@
             $sql = "SELECT * FROM users WHERE login = '$login'";
             $result = mysqli_query($conn,$sql);
             $result_mass = mysqli_fetch_assoc($result);
-            var_dump($result_mass);
             if($result_mass != Null){
                 echo json_message(400,false,'Account already registred');
+            }else{
+                $sql = "INSERT INTO users(login, password, nickname) VALUES('$login','$password', '$nickname')";
+                $result = mysqli_query($conn,$sql);
+                if(!$result){
+                    echo json_message(400,false,'SQL error');
+                }else{
+                    $token = md5($login);
+                    $_SESSION["token"] = $token;
+                    header('Location: index.php');
+                }
             }
-            $sql = "INSERT INTO users(login, password, nickname) VALUES('$login','$password', '$nickname')";
-            $result = mysqli_query($conn,$sql);
-            if(!$result){
-                echo json_message(400,false,'SQL error');
-            }
-            $token = md5($login);
-            $_SESSION["token"] = $token;
-            header('Location: index.php');
         }
     }else{
         header('Location: index.php');
